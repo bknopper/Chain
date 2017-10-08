@@ -6,7 +6,7 @@ public class Message {
 
     public Message() {}
 
-    public Message(int index) {
+    public Message(final int index) {
         this.index = index;
     }
 
@@ -18,11 +18,11 @@ public class Message {
         return text;
     }
 
-    public void setIndex(int index) {
+    public void setIndex(final int index) {
         this.index = index;
     }
 
-    public void setText(String text) {
+    public void setText(final String text) {
         this.text = text;
     }
 }

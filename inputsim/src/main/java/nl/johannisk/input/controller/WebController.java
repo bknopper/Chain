@@ -39,8 +39,8 @@ public class WebController {
 
     @PostMapping(path = "/")
     public String message(@ModelAttribute final Message message, final Model model) {
-        Application application = eurekaClient.getApplication("jchain-node");
-        List<InstanceInfo> instanceInfo = application.getInstances();
+        final Application application = eurekaClient.getApplication("jchain-node");
+        final List<InstanceInfo> instanceInfo = application.getInstances();
         for(InstanceInfo info : instanceInfo) {
             taskExecutor.execute(new NodeInformerTask(Integer.toString(info.getPort()), message));
         }
@@ -50,9 +50,9 @@ public class WebController {
     }
 
     private void addNodesToModel(final Model model) {
-        Application application = eurekaClient.getApplication("jchain-node");
-        List<InstanceInfo> instanceInfo = application.getInstances();
-        List<String> hosts = instanceInfo.stream()
+        final Application application = eurekaClient.getApplication("jchain-node");
+        final List<InstanceInfo> instanceInfo = application.getInstances();
+        final List<String> hosts = instanceInfo.stream()
                 .filter(i -> i.getStatus().equals(InstanceInfo.InstanceStatus.UP))
                 .sorted(Comparator.comparingInt(InstanceInfo::getPort))
                 .map(m -> "localhost:" + m.getPort())
@@ -67,7 +67,7 @@ public class WebController {
         private final int delay;
 
         public NodeInformerTask(final String host, final Message message) {
-            Random random = new Random();
+            final Random random = new Random();
             this.host = host;
             this.message = message;
             this.delay = random.nextInt(10000) + 3000;
@@ -76,10 +76,10 @@ public class WebController {
         public void run() {
             try {
                 Thread.sleep(delay);
-            } catch (InterruptedException e) {
+            } catch (final InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
-            RestTemplate restTemplate = new RestTemplate();
+            final RestTemplate restTemplate = new RestTemplate();
             restTemplate.postForObject("http://localhost:" + host + "/node/message", message, Message.class);
 
         }
